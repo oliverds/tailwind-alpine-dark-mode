@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dark Mode con Tailwind CSS y Apline.js</title>
+    <link href="styles.css" rel="stylesheet">
+    <script src="//unpkg.com/alpinejs" defer></script>
+
+    <script>
+        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark')
+        } else {
+            document.documentElement.classList.remove('dark')
+        }
+    </script>
+</head>
+<body class="antialiased bg-white text-gray-500 dark:bg-gray-900 dark:text-gray-400">
+    <div class="container mx-auto">
+        <div class="flex justify-center gap-4 mt-16">
+            <button
+                type="button"
+                x-data=""
+                @click="$store.darkMode.inactive()"
+                class="font-medium hover:text-gray-900 dark:hover:text-white"
+            >
+                Light
+            </button>
+            <button
+                type="button"
+                x-data=""
+                @click="$store.darkMode.active()"
+                class="font-medium hover:text-gray-900 dark:hover:text-white"
+            >
+                Dark
+            </button>
+            <button
+                type="button"
+                x-data=""
+                @click="$store.darkMode.reset()"
+                class="font-medium hover:text-gray-900 dark:hover:text-white"
+            >
+                Sistema
+            </button>
+        </div>
+        <h1 class="text-4xl font-black text-gray-900 dark:text-white text-center mt-16">
+            Ejemplo de Dark Mode
+        </h1>
+    </div>
+
+    <script>
+        document.addEventListener('alpine:init', () => {
+            Alpine.store('darkMode', {
+                init() {
+                    window.matchMedia('(prefers-color-scheme: dark)').onchange = function() {
+                        if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                            document.documentElement.classList.add('dark')
+                        } else {
+                            document.documentElement.classList.remove('dark')
+                        }
+                    }
+                },
+
+                active() {
+                    localStorage.theme = 'dark'
+
+                    document.documentElement.classList.add('dark')
+                },
+
+                inactive() {
+                    localStorage.theme = 'light'
+
+                    document.documentElement.classList.remove('dark')
+                },
+
+                reset() {
+                    localStorage.removeItem('theme')
+
+                    if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+                        document.documentElement.classList.add('dark')
+                    } else {
+                        document.documentElement.classList.remove('dark')
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+</html>
